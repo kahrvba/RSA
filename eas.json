@@ -1,0 +1,53 @@
+{
+    "cli": {
+      "version": ">= 10.0.0",
+      "appVersionSource": "remote"
+    },
+    "build": {
+      "development": {
+        "developmentClient": true,
+        "distribution": "internal",
+        "ios": {
+          "simulator": false
+        },
+        "android": {
+          "buildType": "apk"
+        },
+        "autoIncrement": true,
+        "env": {
+          "NPM_CONFIG_PACKAGE_MANAGER": "pnpm",
+          "PUBLIC_SENTRY_DSN":"$PUBLIC_SENTRY_DSN",
+          "EXPO_PUBLIC_SUPABASE_URL":"$EXPO_PUBLIC_SUPABASE_URL",
+          "EXPO_PUBLIC_SUPABASE_KEY":"$EXPO_PUBLIC_SUPABASE_KEY",
+          "PUBLIC_GOOGLE_MAPS_API_KEY": "$PUBLIC_GOOGLE_MAPS_API_KEY",
+          "PUBLIC_APPLE_CLIENT_ID": "$PUBLIC_APPLE_CLIENT_ID",
+          "PUBLIC_OAUTH_REDIRECT_SCHEME": "$PUBLIC_OAUTH_REDIRECT_SCHEME",
+          "RCT_NEW_ARCH_ENABLED": "1"
+        }
+      },
+      "production": {
+        "distribution": "internal",
+        "ios": {
+          "image": "latest"
+        },
+        "android": {
+          "buildType": "apk"
+        },
+        "autoIncrement": true,
+        "env": {
+          "NPM_CONFIG_PACKAGE_MANAGER": "pnpm",
+          "PUBLIC_SENTRY_DSN": "$PUBLIC_SENTRY_DSN",
+          "EXPO_PUBLIC_SUPABASE_URL":"$EXPO_PUBLIC_SUPABASE_URL",
+          "EXPO_PUBLIC_SUPABASE_KEY":"$EXPO_PUBLIC_SUPABASE_KEY",
+          "PUBLIC_GOOGLE_MAPS_API_KEY": "$PUBLIC_GOOGLE_MAPS_API_KEY",
+          "PUBLIC_APPLE_CLIENT_ID": "$PUBLIC_APPLE_CLIENT_ID",
+          "PUBLIC_OAUTH_REDIRECT_SCHEME": "$PUBLIC_OAUTH_REDIRECT_SCHEME",
+          "RCT_NEW_ARCH_ENABLED": "1"
+        }
+      }
+    },
+    "submit": {
+      "production": {}
+    }
+  }
+  
