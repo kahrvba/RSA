@@ -31,12 +31,12 @@ Prefered :
 
 | Dev  
 | ------------- 
-| [ ] Setup supabase project  
-| [ ] Setup Twillo and add it to supabase providers table
-| [ ] Setup apple bundleIdentifier  
-| [ ] Setup sentry 
-| [ ] Setup Notifications service id from apple developer   
-| [ ] Add all env and cret to EAS  
+| [X] Setup supabase project  
+| [X] Setup Twillo and add it to supabase providers table
+| [X] Setup apple bundleIdentifier(Both sign-in and push notificatoins ready)
+| [X] Setup sentry 
+| [X] Setup Notifications service id from apple developer   
+| [x] Add all env and cret to EAS  
 | [ ] lets decide color patters and layout patterns  
 | [ ] splashScreen
 | [ ] Landing screen with redirect to phone input and code verification

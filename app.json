@@ -10,7 +10,7 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.rsa.app",
+      "bundleIdentifier": "com.rsa.tech",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
@@ -42,11 +42,25 @@
             "backgroundColor": "#000000"
           }
         }
+      ],
+      [
+        "@sentry/react-native/expo",
+        {
+          "url": "https://sentry.io/",
+          "project": "real-state-applicaition",
+          "organization": "real-state-applicatoin"
+        }
       ]
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "da24d47b-3a1e-45d5-b597-e8718546d143"
+      }
     }
   }
 }
