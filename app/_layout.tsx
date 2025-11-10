@@ -1,8 +1,10 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { useEffect, useState } from 'react';
 import 'react-native-reanimated';
 
+import SplashScreen from '@/components/splachscreen';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import * as Sentry from '@sentry/react-native';
 
@@ -26,17 +28,32 @@ Sentry.init({
 });
 
 export const unstable_settings = {
-  anchor: '(tabs)',
+  anchor: '(home)',
 };
 
 export default Sentry.wrap(function RootLayout() {
   const colorScheme = useColorScheme();
+  const [isAppReady, setIsAppReady] = useState(false);
+  const [splashFinished, setSplashFinished] = useState(false);
+
+  useEffect(() => {
+    if (splashFinished) {
+      setIsAppReady(true);
+    }
+  }, [splashFinished]);
+
+  if (!isAppReady) {
+    return (
+      <SplashScreen
+        onFinish={(isCancelled) => !isCancelled && setSplashFinished(true)}
+      />
+    );
+  }
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
+        <Stack.Screen name="(home)" options={{ headerShown: false }} />
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>

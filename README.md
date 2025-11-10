@@ -22,7 +22,7 @@ Prefered :
  - lets use one full migration file that have the full schema >> sync the remote and local
  - i think we can save time and skip google, apple sign in and only use phone-number for verifications 
  - default = pnpm
-
+ - env, mails, passwords ..etc in supabase Vault; secret tab
 
  - add more rules if you want
  - ..
@@ -37,8 +37,8 @@ Prefered :
 | [X] Setup sentry 
 | [X] Setup Notifications service id from apple developer   
 | [x] Add all env and cret to EAS  
+| [X] splashScreen
 | [ ] lets decide color patters and layout patterns  
-| [ ] splashScreen
 | [ ] Landing screen with redirect to phone input and code verification
 | [ ] registrations forms after phone verifications  
 | [ ] Setup the table for rejesterd users  
