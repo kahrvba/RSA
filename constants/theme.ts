@@ -11,6 +11,7 @@ const primaryRedDark = '#B91C1C'; // Red-700
 const textBlack = '#000000';
 const textGray = '#6B7280'; // Gray-500
 const backgroundWhite = '#FFFFFF';
+const backgroundLight = '#F4F4F5';
 const borderGray = '#E5E7EB'; // Gray-200
 
 export const Colors = {
@@ -25,8 +26,8 @@ export const Colors = {
     textInverse: backgroundWhite,
     
     // Background colors
-    background: backgroundWhite,
-    backgroundSecondary: '#F9FAFB', // Gray-50
+    background: backgroundLight,
+    backgroundSecondary: backgroundWhite,
     
     // Border colors
     border: borderGray,

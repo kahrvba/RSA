@@ -1,22 +1,24 @@
 import { Button, Card, CardContent, Input } from '@/components/ui';
+import { icon } from '@/lib/responsive';
 import { getGray500Color, getPrimaryColor, getWhiteColor } from '@/utils/colors';
 import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    Text,
-    View,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  Text,
+  TouchableWithoutFeedback,
+  View,
 } from 'react-native';
 import Animated, {
-    FadeInDown,
-    FadeInUp,
-    useAnimatedStyle,
-    useSharedValue,
-    withSpring,
-    withTiming,
+  FadeInDown,
+  FadeInUp,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  withTiming,
 } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -100,17 +102,16 @@ export default function RegisterScreen() {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1"
       >
-        <ScrollView
-          className="flex-1"
-          contentContainerStyle={{
-            paddingHorizontal: 24,
-            paddingTop: 8,
-            paddingBottom: 40,
-          }}
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
-        >
-          <View className="max-w-md mx-auto w-full">
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          <View
+            className="flex-1"
+            style={{
+              paddingHorizontal: 24,
+              paddingTop: 8,
+              paddingBottom: 10,
+            }}
+          >
+            <View className="max-w-md mx-auto w-full flex-1">
             {/* Decorative Background Elements */}
             <View className="absolute -top-20 -left-20 w-40 h-40 rounded-full bg-primary/5" />
             <View className="absolute -bottom-10 -right-10 w-32 h-32 rounded-full bg-primary/5" />
@@ -118,7 +119,7 @@ export default function RegisterScreen() {
             {/* Header */}
             <Animated.View
               entering={FadeInDown.duration(700).springify()}
-              className="items-center mb-4"
+              className="items-center mb-3"
             >
               <Animated.View 
                 style={iconAnimatedStyle}
@@ -128,7 +129,7 @@ export default function RegisterScreen() {
                   <View className="absolute inset-0 rounded-3xl bg-primary/20 blur-xl" />
                   <FontAwesome5 
                     name={currentStep === 1 ? "user-edit" : "check-circle"} 
-                    size={32} 
+                    size={icon(32)} 
                     color={whiteColor} 
                   />
                 </View>
@@ -147,12 +148,12 @@ export default function RegisterScreen() {
             {/* Progress Indicator */}
             <Animated.View
               entering={FadeInUp.duration(500).springify()}
-              className="mb-8"
+              className="mb-6"
             >
               <View className="flex-row items-center justify-center mb-3 gap-2">
                 <View className={`w-10 h-10 rounded-full items-center justify-center ${currentStep >= 1 ? 'bg-primary' : 'bg-border'}`}>
                   {currentStep > 1 ? (
-                    <FontAwesome5 name="check" size={14} color={whiteColor} />
+                    <FontAwesome5 name="check" size={icon(14)} color={whiteColor} />
                   ) : (
                     <Text className="text-xs font-bold text-white">1</Text>
                   )}
@@ -175,20 +176,20 @@ export default function RegisterScreen() {
 
             {/* Registration Card */}
             <Animated.View
-              style={animatedCardStyle}
               entering={FadeInUp.delay(250).duration(800).springify()}
-              className="mb-6"
+              className="mb-3"
             >
-              <Card
-                variant="elevated"
-                className="bg-background/95 backdrop-blur-xl border-2 border-border/50 shadow-2xl rounded-3xl overflow-hidden"
-              >
-                <View className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-primary/60 to-primary" />
-                
-                <CardContent className="p-8">
+              <Animated.View style={animatedCardStyle}>
+                <Card
+                  variant="elevated"
+                  className="bg-background/95 backdrop-blur-xl border-2 border-border/50 shadow-2xl rounded-3xl overflow-hidden"
+                >
+                  <View className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-primary/60 to-primary" />
+                  
+                  <CardContent className="p-6">
                   {currentStep === 1 ? (
                     <>
-                      <View className="mb-8">
+                      <View className="mb-4">
                         <Input
                           label="Full Name"
                           placeholder="Enter your full name"
@@ -216,7 +217,7 @@ export default function RegisterScreen() {
                           <View className="w-8 h-8 rounded-full bg-primary/20 items-center justify-center mt-0.5">
                             <MaterialIcons
                               name="info-outline"
-                              size={16}
+                              size={icon(16)}
                               color={primaryColor}
                             />
                           </View>
@@ -240,7 +241,7 @@ export default function RegisterScreen() {
                     </>
                   ) : (
                     <>
-                      <View className="mb-6">
+                      <View className="mb-4">
                         <Input
                           label="Email Address"
                           placeholder="your.email@example.com"
@@ -257,11 +258,11 @@ export default function RegisterScreen() {
                           }
                         />
                         <Text className="text-xs text-text-secondary ml-1 mt-2 font-medium">
-                          We'll send important updates here
+                          We&apos;ll send important updates here
                         </Text>
                       </View>
 
-                      <View className="mb-6">
+                      <View className="mb-4">
                         <Input
                           label="City"
                           placeholder="e.g. Ramallah, Nablus, Jerusalem"
@@ -273,7 +274,7 @@ export default function RegisterScreen() {
                             <View className="w-10 h-10 rounded-xl bg-primary/10 items-center justify-center">
                               <FontAwesome5
                                 name="map-marker-alt"
-                                size={18}
+                                size={icon(18)}
                                 color={gray500Color}
                               />
                             </View>
@@ -284,7 +285,7 @@ export default function RegisterScreen() {
                         </Text>
                       </View>
 
-                      <View className="mb-8">
+                      <View className="mb-4">
                         <Input
                           label="Street Address (Optional)"
                           placeholder="Enter your street address"
@@ -294,7 +295,7 @@ export default function RegisterScreen() {
                           className="mb-2"
                           leftIcon={
                             <View className="w-10 h-10 rounded-xl bg-primary/10 items-center justify-center">
-                              <FontAwesome5 name="home" size={18} color={gray500Color} />
+                              <FontAwesome5 name="home" size={icon(18)} color={gray500Color} />
                             </View>
                           }
                         />
@@ -310,9 +311,9 @@ export default function RegisterScreen() {
                           onPress={() => {
                             setCurrentStep(1);
                           }}
-                          className="flex-1 rounded-xl h-14"
+                          className="flex-1 rounded-xl"
                         >
-                          <FontAwesome5 name="arrow-left" size={14} color={gray500Color} style={{ marginRight: 8 }} />
+                          <FontAwesome5 name="arrow-left" size={icon(14)} color={gray500Color} style={{ marginRight: 8 }} />
                           <Text className="font-semibold">Back</Text>
                         </Button>
                         <Button
@@ -321,7 +322,7 @@ export default function RegisterScreen() {
                           onPress={handleSubmit}
                           loading={loading}
                           disabled={!isStep2Valid}
-                          className="flex-[2] rounded-2xl ml-4 shadow-xl h-14"
+                          className="flex-[2] rounded-2xl ml-4 shadow-xl"
                         >
                           <Text className="font-bold text-base tracking-wide">
                             Complete Setup
@@ -330,17 +331,18 @@ export default function RegisterScreen() {
                       </View>
                     </>
                   )}
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              </Animated.View>
             </Animated.View>
 
             {/* Security Badge */}
             <Animated.View
               entering={FadeInUp.delay(450).duration(600)}
-              className="flex-row items-center justify-center gap-2 mb-6"
+              className="flex-row items-center justify-center gap-2 mb-3"
             >
               <View className="w-5 h-5 rounded-full bg-green-500/20 items-center justify-center">
-                <FontAwesome5 name="shield-alt" size={10} color="#10b981" />
+                <FontAwesome5 name="shield-alt" size={icon(10)} color="#10b981" />
               </View>
               <Text className="text-xs text-text-secondary font-semibold">
                 Your Data is Protected & Encrypted
@@ -359,7 +361,8 @@ export default function RegisterScreen() {
               </Text>
             </Animated.View>
           </View>
-        </ScrollView>
+        </View>
+        </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

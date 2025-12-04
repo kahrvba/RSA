@@ -25,15 +25,15 @@ const variantClasses: Record<ButtonVariant, string> = {
 
 const sizeClasses: Record<ButtonSize, { container: string; text: string }> = {
   sm: {
-    container: 'h-9 px-3 py-2',
+    container: 'px-3 py-2',
     text: 'text-sm',
   },
   md: {
-    container: 'h-11 px-5 py-3',
+    container: 'px-5 py-3',
     text: 'text-base',
   },
   lg: {
-    container: 'h-14 px-6 py-4',
+    container: 'px-6 py-4',
     text: 'text-lg',
   },
 };

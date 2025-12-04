@@ -1,4 +1,6 @@
-import { Card, CardContent } from '@/components/ui';
+import { Card } from '@/components/ui';
+import { featuredListing, newListings, trendingListings } from '@/lib/land-data';
+import { font, icon, moderate, useAccessibilityProps, useResponsiveUtils } from '@/lib/responsive';
 import { getGray500Color, getPrimaryColor, getWhiteColor } from '@/utils/colors';
 import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
@@ -15,112 +17,95 @@ const categories = [
   { id: '4', name: 'Industrial', icon: 'industry', count: 8 },
 ];
 
-const featuredListing = {
-  id: 'featured-1',
-  title: 'Premium Olive Grove Estate',
-  location: 'Ramallah, Palestine',
-  size: '5,200 m²',
-  price: '$280,000',
-  image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&h=600&fit=crop',
-  type: 'Agricultural',
+const formatPrice = (price: string) => {
+  const parts = price.split(',');
+  if (parts.length < 2) return price;
+  const last = parts[parts.length - 1] ?? '';
+  const trimmed = last.slice(0, 2).padEnd(2, '0');
+  return [...parts.slice(0, -1), trimmed].join(',');
 };
 
-const newListings = [
-  {
-    id: '1',
-    title: 'Olive Grove Land',
-    location: 'Ramallah',
-    size: '2,400 m²',
-    price: '$120,000',
-    image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&h=600&fit=crop',
-    type: 'Agricultural',
-    added: '2 hours ago',
-  },
-  {
-    id: '2',
-    title: 'Residential Plot',
-    location: 'Nablus',
-    size: '1,800 m²',
-    price: '$95,000',
-    image: 'https://images.unsplash.com/photo-1504309092620-4d0ec726efa4?w=800&h=600&fit=crop',
-    type: 'Residential',
-    added: '5 hours ago',
-  },
-  {
-    id: '3',
-    title: 'Agricultural Land',
-    location: 'Hebron',
-    size: '3,200 m²',
-    price: '$150,000',
-    image: 'https://images.unsplash.com/photo-1560493676-04071c5f467b?w=800&h=600&fit=crop',
-    type: 'Agricultural',
-    added: '1 day ago',
-  },
-  {
-    id: '4',
-    title: 'Valley View Land',
-    location: 'Bethlehem',
-    size: '2,800 m²',
-    price: '$126,000',
-    image: 'https://images.unsplash.com/photo-1519817914152-22d216bb9170?w=800&h=600&fit=crop',
-    type: 'Agricultural',
-    added: '2 days ago',
-  },
-];
-
-const trendingListings = [
-  {
-    id: 'trend-1',
-    title: 'Mountain View Plot',
-    location: 'Jerusalem',
-    size: '2,100 m²',
-    price: '$180,000',
-    image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=600&fit=crop',
-    views: 856,
-  },
-  {
-    id: 'trend-2',
-    title: 'Farm Land',
-    location: 'Bethlehem',
-    size: '4,500 m²',
-    price: '$200,000',
-    image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=600&fit=crop',
-    views: 743,
-  },
-];
-
 export default function HomeScreen() {
+  const { spacing, typography } = useResponsiveUtils();
   const primaryColor = getPrimaryColor();
   const whiteColor = getWhiteColor();
   const gray500Color = getGray500Color();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const bellAccessibility = useAccessibilityProps('Notifications', 'View notifications');
+  const searchAccessibility = useAccessibilityProps('Search', 'Search for properties');
 
   return (
     <SafeAreaView className="flex-1 bg-background" edges={['top']}>
       <ScrollView
         className="flex-1"
         contentContainerStyle={{
-          paddingBottom: 100,
+          paddingBottom: moderate(100),
         }}
         showsVerticalScrollIndicator={false}
       >
         {/* Header */}
-        <Animated.View entering={FadeInDown.duration(600)} className="px-6 pt-6 pb-8">
-          <View className="flex-row justify-between items-start mb-6">
+        <Animated.View 
+          entering={FadeInDown.duration(600)} 
+          style={{
+            paddingHorizontal: spacing.screenPadding,
+            paddingTop: spacing.lg,
+            paddingBottom: spacing.xl,
+          }}
+        >
+          <View className="flex-row justify-between items-start" style={{ marginBottom: spacing.lg }}>
             <View className="flex-1">
-              <Text className="text-[11px] text-text-secondary mb-2 font-semibold uppercase tracking-widest">
+              <Text 
+                style={{
+                  fontSize: font(11),
+                  color: gray500Color,
+                  marginBottom: spacing.xs,
+                  fontWeight: '600',
+                  textTransform: 'uppercase',
+                  letterSpacing: moderate(2),
+                }}
+              >
                 Welcome back
               </Text>
-              <Text className="text-3xl font-black text-text leading-tight">
+              <Text 
+                style={{
+                  fontSize: typography.h1,
+                  fontWeight: '900',
+                  color: '#000000',
+                  lineHeight: typography.getLineHeight(typography.h1),
+                }}
+              >
                 Discover Your{'\n'}Perfect Land
               </Text>
             </View>
             <TouchableOpacity
               activeOpacity={0.7}
-              className="w-12 h-12 rounded-2xl bg-primary/10 items-center justify-center shadow-sm"
+              style={{
+                width: moderate(48),
+                height: moderate(48),
+                borderRadius: moderate(16),
+                backgroundColor: `${primaryColor}1A`,
+                alignItems: 'center',
+                justifyContent: 'center',
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 1 },
+                shadowOpacity: 0.1,
+                shadowRadius: 2,
+                elevation: 2,
+              }}
+              {...bellAccessibility}
             >
-              <FontAwesome5 name="bell" size={18} color={primaryColor} />
-              <View className="absolute top-2 right-2 w-2 h-2 rounded-full bg-primary" />
+              <FontAwesome5 name="bell" size={icon(18)} color={primaryColor} />
+              <View 
+                style={{
+                  position: 'absolute',
+                  top: moderate(8),
+                  right: moderate(8),
+                  width: moderate(8),
+                  height: moderate(8),
+                  borderRadius: moderate(4),
+                  backgroundColor: primaryColor,
+                }}
+              />
             </TouchableOpacity>
           </View>
 
@@ -128,16 +113,58 @@ export default function HomeScreen() {
           <TouchableOpacity
             activeOpacity={0.7}
             onPress={() => router.push('/(home)/search')}
-            className="bg-background-secondary rounded-2xl p-5 flex-row items-center border border-border shadow-sm"
+            style={{
+              backgroundColor: '#F9FAFB',
+              borderRadius: moderate(16),
+              padding: moderate(20),
+              flexDirection: 'row',
+              alignItems: 'center',
+              borderWidth: 1,
+              borderColor: '#E5E7EB',
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 1 },
+              shadowOpacity: 0.1,
+              shadowRadius: 2,
+              elevation: 2,
+            }}
+            {...searchAccessibility}
           >
-            <View className="w-10 h-10 rounded-xl bg-primary/10 items-center justify-center mr-3">
-              <FontAwesome5 name="search" size={16} color={primaryColor} />
+            <View 
+              style={{
+                width: moderate(40),
+                height: moderate(40),
+                borderRadius: moderate(12),
+                backgroundColor: `${primaryColor}1A`,
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginRight: spacing.md,
+              }}
+            >
+              <FontAwesome5 name="search" size={icon(16)} color={primaryColor} />
             </View>
-            <Text className="text-[15px] text-text-secondary font-medium flex-1">
+            <Text 
+              style={{
+                fontSize: font(15),
+                color: gray500Color,
+                fontWeight: '500',
+                flex: 1,
+              }}
+            >
               Search location, size, price...
             </Text>
-            <View className="w-10 h-10 rounded-xl bg-white border border-border items-center justify-center">
-              <MaterialIcons name="tune" size={20} color={gray500Color} />
+            <View 
+              style={{
+                width: moderate(40),
+                height: moderate(40),
+                borderRadius: moderate(12),
+                backgroundColor: whiteColor,
+                borderWidth: 1,
+                borderColor: '#E5E7EB',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <MaterialIcons name="tune" size={icon(20)} color={gray500Color} />
             </View>
           </TouchableOpacity>
         </Animated.View>
@@ -145,20 +172,36 @@ export default function HomeScreen() {
         {/* Categories */}
         <Animated.View
           entering={FadeInDown.delay(100).duration(600)}
-          className="mb-8"
+          style={{ marginBottom: spacing.xl }}
         >
-          <View className="px-6 mb-4">
-            <Text className="text-lg font-black text-text">
+          <View style={{ paddingHorizontal: spacing.screenPadding, marginBottom: spacing.md }}>
+            <Text 
+              style={{
+                fontSize: typography.h4,
+                fontWeight: '900',
+                color: '#000000',
+              }}
+            >
               Categories
             </Text>
-            <Text className="text-xs text-text-secondary mt-1">
+            <Text 
+              style={{
+                fontSize: font(12),
+                color: gray500Color,
+                marginTop: spacing.xs,
+              }}
+            >
               Find your ideal property type
             </Text>
           </View>
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ paddingLeft: 24, paddingRight: 24, gap: 14 }}
+            contentContainerStyle={{ 
+              paddingLeft: spacing.lg, 
+              paddingRight: spacing.lg, 
+              gap: moderate(14) 
+            }}
           >
             {categories.map((category, index) => (
               <Animated.View
@@ -168,22 +211,41 @@ export default function HomeScreen() {
                 <TouchableOpacity
                   activeOpacity={0.8}
                   onPress={() => setSelectedCategory(category.id)}
-                  className={`w-[120px] h-[130px] rounded-3xl p-4 items-center justify-center shadow-md ${
-                    selectedCategory === category.id
-                      ? 'bg-primary'
-                      : 'bg-background-secondary border-2 border-border'
-                  }`}
+                  style={{
+                    width: moderate(190),
+                    height: moderate(160),
+                    borderRadius: moderate(24),
+                    padding: moderate(16),
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: selectedCategory === category.id 
+                      ? primaryColor 
+                      : '#F9FAFB',
+                    borderWidth: selectedCategory === category.id ? 0 : 2,
+                    borderColor: '#E5E7EB',
+                  }}
                 >
                   <View
-                    className={`w-14 h-14 rounded-2xl items-center justify-center mb-3 ${
-                      selectedCategory === category.id
-                        ? 'bg-white/20'
-                        : 'bg-white shadow-sm'
-                    }`}
+                    style={{
+                      width: moderate(56),
+                      height: moderate(56),
+                      borderRadius: moderate(16),
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginBottom: spacing.md,
+                      backgroundColor: selectedCategory === category.id
+                        ? 'rgba(255, 255, 255, 0.2)'
+                        : whiteColor,
+                      shadowColor: '#000',
+                      shadowOffset: { width: 0, height: 1 },
+                      shadowOpacity: selectedCategory === category.id ? 0 : 0.1,
+                      shadowRadius: 2,
+                      elevation: selectedCategory === category.id ? 0 : 2,
+                    }}
                   >
                     <FontAwesome5
                       name={category.icon as any}
-                      size={20}
+                      size={icon(20)}
                       color={
                         selectedCategory === category.id
                           ? whiteColor
@@ -192,21 +254,27 @@ export default function HomeScreen() {
                     />
                   </View>
                   <Text
-                    className={`text-[13px] font-bold text-center mb-1 ${
-                      selectedCategory === category.id
-                        ? 'text-white'
-                        : 'text-text'
-                    }`}
+                    style={{
+                      fontSize: font(12),
+                      fontWeight: '700',
+                      textAlign: 'center',
+                      marginBottom: spacing.xs,
+                      color: selectedCategory === category.id
+                        ? whiteColor
+                        : '#000000',
+                    }}
                     numberOfLines={1}
                   >
                     {category.name}
                   </Text>
                   <Text
-                    className={`text-[11px] font-semibold ${
-                      selectedCategory === category.id
-                        ? 'text-white/90'
-                        : 'text-text-secondary'
-                    }`}
+                    style={{
+                      fontSize: font(11),
+                      fontWeight: '600',
+                      color: selectedCategory === category.id
+                        ? 'rgba(255, 255, 255, 0.9)'
+                        : gray500Color,
+                    }}
                   >
                     {category.count} lands
                   </Text>
@@ -219,19 +287,46 @@ export default function HomeScreen() {
         {/* Featured Listing */}
         <Animated.View
           entering={FadeInDown.delay(200).duration(600)}
-          className="mb-8 px-6"
+          style={{ marginBottom: spacing.xl, paddingHorizontal: spacing.screenPadding }}
         >
-          <View className="flex-row items-center justify-between mb-4">
+          <View className="flex-row items-center justify-between" style={{ marginBottom: spacing.md }}>
             <View>
-              <Text className="text-lg font-black text-text">
+              <Text 
+                style={{
+                  fontSize: typography.h4,
+                  fontWeight: '900',
+                  color: '#000000',
+                }}
+              >
                 Featured Property
               </Text>
-              <Text className="text-xs text-text-secondary mt-1">
+              <Text 
+                style={{
+                  fontSize: font(12),
+                  color: gray500Color,
+                  marginTop: spacing.xs,
+                }}
+              >
                 Premium selection
               </Text>
             </View>
-            <View className="px-3 py-1.5 rounded-full bg-primary/10">
-              <Text className="text-[10px] text-primary font-bold">⭐ BEST PICK</Text>
+            <View 
+              style={{
+                paddingHorizontal: spacing.md,
+                paddingVertical: moderate(6),
+                borderRadius: moderate(9999),
+                backgroundColor: `${primaryColor}1A`,
+              }}
+            >
+              <Text 
+                style={{
+                  fontSize: font(10),
+                  color: primaryColor,
+                  fontWeight: '700',
+                }}
+              >
+                ⭐ BEST PICK
+              </Text>
             </View>
           </View>
           <TouchableOpacity activeOpacity={0.95}>
@@ -240,56 +335,183 @@ export default function HomeScreen() {
               padding="none"
               className="overflow-hidden rounded-3xl shadow-lg"
             >
-              <View className="h-64 relative">
+              <View style={{ height: moderate(256), position: 'relative' }}>
                 <Image
                   source={{ uri: featuredListing.image }}
-                  className="w-full h-full"
+                  style={{ width: '100%', height: '100%' }}
                   contentFit="cover"
                   transition={300}
                 />
-                <View className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/80" />
+                <View 
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    backgroundColor: 'transparent',
+                  }}
+                />
                 
                 {/* Type Badge */}
-                <View className="absolute top-4 left-4">
-                  <View className="px-4 py-2 rounded-full bg-white/95 backdrop-blur-sm shadow-md">
-                    <Text className="text-[11px] text-text font-black">
+                <View 
+                  style={{
+                    position: 'absolute',
+                    top: moderate(16),
+                    left: moderate(16),
+                  }}
+                >
+                  <View 
+                    style={{
+                      paddingHorizontal: moderate(16),
+                      paddingVertical: moderate(8),
+                      borderRadius: moderate(9999),
+                      backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                      shadowColor: '#000',
+                      shadowOffset: { width: 0, height: 2 },
+                      shadowOpacity: 0.1,
+                      shadowRadius: 4,
+                      elevation: 3,
+                    }}
+                  >
+                    <Text 
+                      style={{
+                        fontSize: font(11),
+                        color: '#000000',
+                        fontWeight: '900',
+                      }}
+                    >
                       {featuredListing.type}
                     </Text>
                   </View>
                 </View>
 
                 {/* Bookmark Icon */}
-                <View className="absolute top-4 right-4">
-                  <View className="w-10 h-10 rounded-full bg-white/95 backdrop-blur-sm items-center justify-center shadow-md">
-                    <FontAwesome5 name="heart" size={14} color={primaryColor} />
+                <View 
+                  style={{
+                    position: 'absolute',
+                    top: moderate(16),
+                    right: moderate(16),
+                  }}
+                >
+                  <View 
+                    style={{
+                      width: moderate(40),
+                      height: moderate(40),
+                      borderRadius: moderate(20),
+                      backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      shadowColor: '#000',
+                      shadowOffset: { width: 0, height: 2 },
+                      shadowOpacity: 0.1,
+                      shadowRadius: 4,
+                      elevation: 3,
+                    }}
+                  >
+                    <FontAwesome5 name="heart" size={icon(14)} color={primaryColor} />
                   </View>
                 </View>
 
                 {/* Content */}
-                <View className="absolute bottom-0 left-0 right-0 p-5">
-                  <Text className="text-2xl font-black text-white mb-2" numberOfLines={1}>
+                <View 
+                  style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    padding: moderate(20),
+                  }}
+                >
+                  <Text 
+                    style={{
+                      fontSize: typography.h2,
+                      fontWeight: '900',
+                      color: whiteColor,
+                      marginBottom: spacing.xs,
+                    }}
+                    numberOfLines={1}
+                  >
                     {featuredListing.title}
                   </Text>
-                  <View className="flex-row items-center gap-2 mb-4">
-                    <View className="w-6 h-6 rounded-full bg-white/20 items-center justify-center">
-                      <FontAwesome5 name="map-marker-alt" size={11} color={whiteColor} />
+                  <View className="flex-row items-center" style={{ marginBottom: spacing.md, gap: moderate(8) }}>
+                    <View 
+                      style={{
+                        width: moderate(24),
+                        height: moderate(24),
+                        borderRadius: moderate(12),
+                        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <FontAwesome5 name="map-marker-alt" size={icon(11)} color={whiteColor} />
                     </View>
-                    <Text className="text-sm text-white/95 font-bold">
+                    <Text 
+                      style={{
+                        fontSize: font(14),
+                        color: 'rgba(255, 255, 255, 0.95)',
+                        fontWeight: '700',
+                      }}
+                    >
                       {featuredListing.location}
                     </Text>
                   </View>
-                  <View className="flex-row items-center justify-between bg-white/10 backdrop-blur-md rounded-2xl p-4">
+                  <View 
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                      borderRadius: moderate(16),
+                      padding: moderate(16),
+                    }}
+                  >
                     <View className="flex-1">
-                      <Text className="text-[10px] text-white/70 mb-1 font-semibold">Size</Text>
-                      <Text className="text-base text-white font-black">
+                      <Text 
+                        style={{
+                          fontSize: font(10),
+                          color: 'rgba(255, 255, 255, 0.7)',
+                          marginBottom: spacing.xs,
+                          fontWeight: '600',
+                        }}
+                      >
+                        Size
+                      </Text>
+                      <Text 
+                        style={{
+                          fontSize: font(16),
+                          color: whiteColor,
+                          fontWeight: '900',
+                        }}
+                      >
                         {featuredListing.size}
                       </Text>
                     </View>
-                    <View className="h-8 w-px bg-white/30 mx-3" />
+                    <View 
+                      style={{
+                        height: moderate(32),
+                        width: 1,
+                        backgroundColor: 'rgba(255, 255, 255, 0.3)',
+                        marginHorizontal: spacing.md,
+                      }}
+                    />
                     <View className="flex-1 items-end">
-                      <Text className="text-[10px] text-white/70 mb-1 font-semibold">Price</Text>
-                      <Text className="text-xl font-black text-white">
-                        {featuredListing.price}
+                      <Text 
+                        style={{
+                          fontSize: font(10),
+                          color: 'rgba(255, 255, 255, 0.7)',
+                          marginBottom: spacing.xs,
+                          fontWeight: '600',
+                        }}
+                      >
+                        Price
+                      </Text>
+                      <Text 
+                        style={{
+                          fontSize: typography.h3,
+                          fontWeight: '900',
+                          color: whiteColor,
+                        }}
+                      >
+                        {formatPrice(featuredListing.price)}
                       </Text>
                     </View>
                   </View>
@@ -302,26 +524,53 @@ export default function HomeScreen() {
         {/* New Listings */}
         <Animated.View
           entering={FadeInDown.delay(300).duration(600)}
-          className="mb-8"
+          style={{ marginBottom: spacing.xl }}
         >
-          <View className="flex-row items-center justify-between mb-4 px-6">
+          <View 
+            className="flex-row items-center justify-between" 
+            style={{ marginBottom: spacing.md, paddingHorizontal: spacing.screenPadding }}
+          >
             <View>
-              <Text className="text-lg font-black text-text">
+              <Text 
+                style={{
+                  fontSize: typography.h4,
+                  fontWeight: '900',
+                  color: '#000000',
+                }}
+              >
                 New Listings
               </Text>
-              <Text className="text-xs text-text-secondary mt-1">
+              <Text 
+                style={{
+                  fontSize: font(12),
+                  color: gray500Color,
+                  marginTop: spacing.xs,
+                }}
+              >
                 Recently added properties
               </Text>
             </View>
-            <TouchableOpacity activeOpacity={0.7} className="flex-row items-center gap-1">
-              <Text className="text-sm font-bold text-primary">See All</Text>
-              <FontAwesome5 name="chevron-right" size={12} color={primaryColor} />
+            <TouchableOpacity activeOpacity={0.7} className="flex-row items-center" style={{ gap: moderate(4) }}>
+              <Text 
+                style={{
+                  fontSize: font(14),
+                  fontWeight: '700',
+                  color: primaryColor,
+                }}
+              >
+                See All
+              </Text>
+              <FontAwesome5 name="chevron-right" size={icon(12)} color={primaryColor} />
             </TouchableOpacity>
           </View>
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ paddingLeft: 24, paddingRight: 24, gap: 14 }}
+            contentContainerStyle={{ 
+              paddingLeft: spacing.lg, 
+              paddingRight: spacing.lg, 
+              gap: moderate(14) 
+            }}
           >
             {newListings.map((item, index) => (
               <Animated.View
@@ -329,65 +578,165 @@ export default function HomeScreen() {
                 entering={FadeInRight.delay(350 + index * 80).duration(500)}
               >
                 <TouchableOpacity activeOpacity={0.95}>
-                  <Card
-                    variant="elevated"
-                    padding="none"
-                    className="overflow-hidden rounded-2xl w-64 shadow-md"
-                  >
-                    <View className="h-40 relative">
+                  <View style={{ width: moderate(280) }}>
+                    <Card
+                      variant="default"
+                      padding="none"
+                      className="overflow-hidden rounded-2xl"
+                    >
+                    <View style={{ height: moderate(160), position: 'relative' }}>
                       <Image
                         source={{ uri: item.image }}
-                        className="w-full h-full"
+                        style={{ width: '100%', height: '100%' }}
                         contentFit="cover"
                         transition={300}
                       />
-                      <View className="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent" />
-                      <View className="absolute top-3 right-3">
-                        <View className="w-9 h-9 rounded-full bg-white/95 backdrop-blur-sm items-center justify-center shadow-sm">
-                          <FontAwesome5 name="heart" size={12} color={gray500Color} />
+                      <View 
+                        style={{
+                          position: 'absolute',
+                          inset: 0,
+                          backgroundColor: 'transparent',
+                        }}
+                      />
+                      <View 
+                        style={{
+                          position: 'absolute',
+                          top: moderate(12),
+                          right: moderate(12),
+                        }}
+                      >
+                        <View 
+                          style={{
+                            width: moderate(36),
+                            height: moderate(36),
+                            borderRadius: moderate(18),
+                            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            shadowColor: '#000',
+                            shadowOffset: { width: 0, height: 1 },
+                            shadowOpacity: 0.1,
+                            shadowRadius: 2,
+                            elevation: 2,
+                          }}
+                        >
+                          <FontAwesome5 name="heart" size={icon(12)} color={gray500Color} />
                         </View>
                       </View>
-                      <View className="absolute bottom-3 left-3 px-2.5 py-1 rounded-full bg-black/70 backdrop-blur-sm">
-                        <Text className="text-[10px] text-white font-bold">
+                      <View 
+                        style={{
+                          position: 'absolute',
+                          bottom: moderate(12),
+                          left: moderate(12),
+                          paddingHorizontal: moderate(10),
+                          paddingVertical: moderate(4),
+                          borderRadius: moderate(9999),
+                          backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                        }}
+                      >
+                        <Text 
+                          style={{
+                            fontSize: font(10),
+                            color: whiteColor,
+                            fontWeight: '700',
+                          }}
+                        >
                           🕐 {item.added}
                         </Text>
                       </View>
                     </View>
-                    <CardContent className="p-4">
-                      <Text className="text-sm font-black text-text mb-1.5" numberOfLines={1}>
+                    <View style={{ padding: moderate(18) }}>
+                      <Text 
+                        style={{
+                          fontSize: font(14),
+                          fontWeight: '900',
+                          color: '#000000',
+                          marginBottom: moderate(6),
+                        }}
+                        numberOfLines={1}
+                      >
                         {item.title}
                       </Text>
-                      <View className="flex-row items-center gap-1.5 mb-3">
+                      <View className="flex-row items-center" style={{ marginBottom: spacing.md, gap: moderate(6) }}>
                         <FontAwesome5
                           name="map-marker-alt"
-                          size={10}
+                          size={icon(10)}
                           color={gray500Color}
                         />
-                        <Text className="text-xs text-text-secondary font-semibold flex-1" numberOfLines={1}>
+                        <Text 
+                          style={{
+                            fontSize: font(12),
+                            color: gray500Color,
+                            fontWeight: '600',
+                            flex: 1,
+                          }}
+                          numberOfLines={1}
+                        >
                           {item.location}
                         </Text>
                       </View>
-                      <View className="flex-row items-center pt-3 border-t border-border">
+                      <View 
+                        className="flex-row items-center" 
+                        style={{
+                          paddingTop: spacing.md,
+                          borderTopWidth: 1,
+                          borderTopColor: '#E5E7EB',
+                        }}
+                      >
                         <View className="flex-1">
-                          <Text className="text-[10px] text-text-secondary mb-1 font-semibold">
+                          <Text 
+                            style={{
+                              fontSize: font(10),
+                              color: gray500Color,
+                              marginBottom: spacing.xs,
+                              fontWeight: '600',
+                            }}
+                          >
                             Size
                           </Text>
-                          <Text className="text-xs text-text font-black">
+                          <Text 
+                            style={{
+                              fontSize: font(12),
+                              color: '#000000',
+                              fontWeight: '900',
+                            }}
+                          >
                             {item.size}
                           </Text>
                         </View>
-                        <View className="h-8 w-px bg-border mx-3" />
+                        <View 
+                          style={{
+                            height: moderate(32),
+                            width: 1,
+                            backgroundColor: '#E5E7EB',
+                            marginHorizontal: spacing.md,
+                          }}
+                        />
                         <View className="flex-1 items-end">
-                          <Text className="text-[10px] text-text-secondary mb-1 font-semibold">
+                          <Text 
+                            style={{
+                              fontSize: font(10),
+                              color: gray500Color,
+                              marginBottom: spacing.xs,
+                              fontWeight: '600',
+                            }}
+                          >
                             Price
                           </Text>
-                          <Text className="text-sm font-black text-primary">
-                            {item.price}
+                          <Text 
+                            style={{
+                              fontSize: font(14),
+                              fontWeight: '900',
+                              color: primaryColor,
+                            }}
+                          >
+                            {formatPrice(item.price)}
                           </Text>
                         </View>
                       </View>
-                    </CardContent>
-                  </Card>
+                    </View>
+                    </Card>
+                  </View>
                 </TouchableOpacity>
               </Animated.View>
             ))}
@@ -397,27 +746,47 @@ export default function HomeScreen() {
         {/* Trending */}
         <Animated.View
           entering={FadeInDown.delay(400).duration(600)}
-          className="mb-8 px-6"
+          style={{ marginBottom: spacing.xl, paddingHorizontal: spacing.screenPadding }}
         >
-          <View className="flex-row items-center justify-between mb-4">
+          <View className="flex-row items-center justify-between" style={{ marginBottom: spacing.md }}>
             <View>
-              <Text className="text-lg font-black text-text">
+              <Text 
+                style={{
+                  fontSize: typography.h4,
+                  fontWeight: '900',
+                  color: '#000000',
+                }}
+              >
                 Trending Now
               </Text>
-              <Text className="text-xs text-text-secondary mt-1">
+              <Text 
+                style={{
+                  fontSize: font(12),
+                  color: gray500Color,
+                  marginTop: spacing.xs,
+                }}
+              >
                 🔥 Most viewed this week
               </Text>
             </View>
-            <TouchableOpacity activeOpacity={0.7} className="flex-row items-center gap-1">
-              <Text className="text-sm font-bold text-primary">See All</Text>
-              <FontAwesome5 name="chevron-right" size={12} color={primaryColor} />
+            <TouchableOpacity activeOpacity={0.7} className="flex-row items-center" style={{ gap: moderate(4) }}>
+              <Text 
+                style={{
+                  fontSize: font(14),
+                  fontWeight: '700',
+                  color: primaryColor,
+                }}
+              >
+                See All
+              </Text>
+              <FontAwesome5 name="chevron-right" size={icon(12)} color={primaryColor} />
             </TouchableOpacity>
           </View>
           {trendingListings.map((item, index) => (
             <Animated.View
               key={item.id}
               entering={FadeInUp.delay(450 + index * 100).duration(500)}
-              className="mb-4"
+              style={{ marginBottom: spacing.md }}
             >
               <TouchableOpacity activeOpacity={0.95}>
                 <Card
@@ -425,58 +794,152 @@ export default function HomeScreen() {
                   padding="none"
                   className="overflow-hidden rounded-2xl shadow-md"
                 >
-                  <View className="flex-row h-36">
-                    <View className="w-36 h-full relative">
+                  <View className="flex-row" style={{ height: moderate(144) }}>
+                    <View style={{ width: moderate(144), height: '100%', position: 'relative' }}>
                       <Image
                         source={{ uri: item.image }}
-                        className="w-full h-full"
+                        style={{ width: '100%', height: '100%' }}
                         contentFit="cover"
                         transition={300}
                       />
-                      <View className="absolute top-2 left-2 px-2 py-1 rounded-full bg-primary shadow-sm">
-                        <Text className="text-[9px] text-white font-black">TRENDING</Text>
+                      <View 
+                        style={{
+                          position: 'absolute',
+                          top: moderate(8),
+                          left: moderate(8),
+                          paddingHorizontal: moderate(8),
+                          paddingVertical: moderate(4),
+                          borderRadius: moderate(9999),
+                          backgroundColor: primaryColor,
+                          shadowColor: '#000',
+                          shadowOffset: { width: 0, height: 1 },
+                          shadowOpacity: 0.2,
+                          shadowRadius: 2,
+                          elevation: 2,
+                        }}
+                      >
+                        <Text 
+                          style={{
+                            fontSize: font(9),
+                            color: whiteColor,
+                            fontWeight: '900',
+                          }}
+                        >
+                          TRENDING
+                        </Text>
                       </View>
                     </View>
-                    <View className="flex-1 p-4">
-                      <Text className="text-sm font-black text-text mb-1.5" numberOfLines={1}>
+                    <View className="flex-1" style={{ padding: moderate(16) }}>
+                      <Text 
+                        style={{
+                          fontSize: font(14),
+                          fontWeight: '900',
+                          color: '#000000',
+                          marginBottom: moderate(6),
+                        }}
+                        numberOfLines={1}
+                      >
                         {item.title}
                       </Text>
-                      <View className="flex-row items-center gap-1.5 mb-2">
+                      <View className="flex-row items-center" style={{ marginBottom: spacing.xs, gap: moderate(6) }}>
                         <FontAwesome5
                           name="map-marker-alt"
-                          size={10}
+                          size={icon(10)}
                           color={gray500Color}
                         />
-                        <Text className="text-xs text-text-secondary font-semibold flex-1" numberOfLines={1}>
+                        <Text 
+                          style={{
+                            fontSize: font(12),
+                            color: gray500Color,
+                            fontWeight: '600',
+                            flex: 1,
+                          }}
+                          numberOfLines={1}
+                        >
                           {item.location}
                         </Text>
                       </View>
-                      <View className="mb-3">
-                        <View className="px-2.5 py-1 rounded-full bg-primary/10 self-start">
-                          <View className="flex-row items-center gap-1.5">
-                            <FontAwesome5 name="eye" size={10} color={primaryColor} />
-                            <Text className="text-[10px] text-primary font-bold">
+                      <View style={{ marginBottom: spacing.md }}>
+                        <View 
+                          style={{
+                            paddingHorizontal: moderate(10),
+                            paddingVertical: moderate(4),
+                            borderRadius: moderate(9999),
+                            backgroundColor: `${primaryColor}1A`,
+                            alignSelf: 'flex-start',
+                          }}
+                        >
+                          <View className="flex-row items-center" style={{ gap: moderate(6) }}>
+                            <FontAwesome5 name="eye" size={icon(10)} color={primaryColor} />
+                            <Text 
+                              style={{
+                                fontSize: font(10),
+                                color: primaryColor,
+                                fontWeight: '700',
+                              }}
+                            >
                               {item.views.toLocaleString()}
                             </Text>
                           </View>
                         </View>
                       </View>
-                      <View className="flex-row items-center pt-2 border-t border-border mt-auto">
+                      <View 
+                        className="flex-row items-center" 
+                        style={{
+                          paddingTop: spacing.xs,
+                          borderTopWidth: 1,
+                          borderTopColor: '#E5E7EB',
+                          marginTop: 'auto',
+                        }}
+                      >
                         <View className="flex-1">
-                          <Text className="text-[10px] text-text-secondary mb-0.5 font-semibold">
+                          <Text 
+                            style={{
+                              fontSize: font(10),
+                              color: gray500Color,
+                              marginBottom: moderate(2),
+                              fontWeight: '600',
+                            }}
+                          >
                             Size
                           </Text>
-                          <Text className="text-xs text-text font-black">
+                          <Text 
+                            style={{
+                              fontSize: font(12),
+                              color: '#000000',
+                              fontWeight: '900',
+                            }}
+                          >
                             {item.size}
                           </Text>
                         </View>
-                        <View className="h-8 w-px bg-border mx-2" />
+                        <View 
+                          style={{
+                            height: moderate(32),
+                            width: 1,
+                            backgroundColor: '#E5E7EB',
+                            marginHorizontal: spacing.xs,
+                          }}
+                        />
                         <View className="flex-1 items-end">
-                          <Text className="text-[10px] text-text-secondary mb-0.5 font-semibold">
+                          <Text 
+                            style={{
+                              fontSize: font(10),
+                              color: gray500Color,
+                              marginBottom: moderate(2),
+                              fontWeight: '600',
+                            }}
+                          >
                             Price
                           </Text>
-                          <Text className="text-sm font-black text-primary">
-                            {item.price}
+                          <Text 
+                            style={{
+                              fontSize: font(14),
+                              fontWeight: '900',
+                              color: primaryColor,
+                            }}
+                          >
+                            {formatPrice(item.price)}
                           </Text>
                         </View>
                       </View>
@@ -491,41 +954,115 @@ export default function HomeScreen() {
         {/* Quick Stats */}
         <Animated.View
           entering={FadeInUp.delay(500).duration(600)}
-          className="px-6 mb-6"
+          style={{ paddingHorizontal: spacing.screenPadding, marginBottom: spacing.lg }}
         >
-          <View className="bg-gradient-to-br from-primary/10 to-primary/5 rounded-3xl p-6 border-2 border-primary/20 shadow-sm">
-            <View className="flex-row items-center mb-5">
-              <View className="w-10 h-10 rounded-2xl bg-primary/20 items-center justify-center mr-3">
-                <FontAwesome5 name="chart-line" size={16} color={primaryColor} />
+          <View 
+            style={{
+              backgroundColor: `${primaryColor}1A`,
+              borderRadius: moderate(24),
+              padding: moderate(24),
+              borderWidth: 2,
+              borderColor: `${primaryColor}33`,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 1 },
+              shadowOpacity: 0.1,
+              shadowRadius: 2,
+              elevation: 2,
+            }}
+          >
+            <View className="flex-row items-center" style={{ marginBottom: moderate(20) }}>
+              <View 
+                style={{
+                  width: moderate(40),
+                  height: moderate(40),
+                  borderRadius: moderate(16),
+                  backgroundColor: `${primaryColor}33`,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginRight: spacing.md,
+                }}
+              >
+                <FontAwesome5 name="chart-line" size={icon(16)} color={primaryColor} />
               </View>
-              <Text className="text-base font-black text-text">
+              <Text 
+                style={{
+                  fontSize: font(16),
+                  fontWeight: '900',
+                  color: '#000000',
+                }}
+              >
                 Market Overview
               </Text>
             </View>
             <View className="flex-row justify-between">
-              <View className="flex-1 items-center bg-white/50 rounded-2xl py-4">
-                <Text className="text-2xl font-black text-primary mb-1.5">
+              <View className="flex-1 items-center" style={{ backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: moderate(16), paddingVertical: moderate(16) }}>
+                <Text 
+                  style={{
+                    fontSize: typography.h2,
+                    fontWeight: '900',
+                    color: primaryColor,
+                    marginBottom: moderate(6),
+                  }}
+                >
                   62
                 </Text>
-                <Text className="text-[10px] text-text-secondary text-center font-bold px-2">
+                <Text 
+                  style={{
+                    fontSize: font(10),
+                    color: gray500Color,
+                    textAlign: 'center',
+                    fontWeight: '700',
+                    paddingHorizontal: spacing.xs,
+                  }}
+                >
                   Total Properties
                 </Text>
               </View>
-              <View className="w-3" />
-              <View className="flex-1 items-center bg-white/50 rounded-2xl py-4">
-                <Text className="text-2xl font-black text-primary mb-1.5">
+              <View style={{ width: moderate(12) }} />
+              <View className="flex-1 items-center" style={{ backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: moderate(16), paddingVertical: moderate(16) }}>
+                <Text 
+                  style={{
+                    fontSize: typography.h2,
+                    fontWeight: '900',
+                    color: primaryColor,
+                    marginBottom: moderate(6),
+                  }}
+                >
                   48
                 </Text>
-                <Text className="text-[10px] text-text-secondary text-center font-bold px-2">
+                <Text 
+                  style={{
+                    fontSize: font(10),
+                    color: gray500Color,
+                    textAlign: 'center',
+                    fontWeight: '700',
+                    paddingHorizontal: spacing.xs,
+                  }}
+                >
                   Available Lands
                 </Text>
               </View>
-              <View className="w-3" />
-              <View className="flex-1 items-center bg-white/50 rounded-2xl py-4">
-                <Text className="text-2xl font-black text-primary mb-1.5">
+              <View style={{ width: moderate(12) }} />
+              <View className="flex-1 items-center" style={{ backgroundColor: 'rgba(255, 255, 255, 0.5)', borderRadius: moderate(16), paddingVertical: moderate(16) }}>
+                <Text 
+                  style={{
+                    fontSize: typography.h2,
+                    fontWeight: '900',
+                    color: primaryColor,
+                    marginBottom: moderate(6),
+                  }}
+                >
                   $95K
                 </Text>
-                <Text className="text-[10px] text-text-secondary text-center font-bold px-2">
+                <Text 
+                  style={{
+                    fontSize: font(10),
+                    color: gray500Color,
+                    textAlign: 'center',
+                    fontWeight: '700',
+                    paddingHorizontal: spacing.xs,
+                  }}
+                >
                   Avg. Price
                 </Text>
               </View>

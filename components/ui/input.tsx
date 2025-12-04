@@ -1,6 +1,13 @@
 import { getGray400Color } from '@/utils/colors';
 import React from 'react';
-import { Text, TextInput, TextInputProps, View } from 'react-native';
+import {
+  Platform,
+  Text,
+  TextInput,
+  TextInputProps,
+  TextStyle,
+  View,
+} from 'react-native';
 
 export type InputSize = 'sm' | 'md' | 'lg';
 
@@ -37,7 +44,8 @@ export function Input({
   leftIcon,
   rightIcon,
   className = '',
-  ...props
+  style,
+  ...textInputProps
 }: InputProps) {
   const gray400Color = getGray400Color();
   const hasError = !!error;
@@ -72,7 +80,31 @@ export function Input({
             ${!rightIcon ? '' : ''}
           `}
           placeholderTextColor={gray400Color}
-          {...props}
+          style={[
+            (() => {
+              const fontSizeMap: Record<InputSize, number> = {
+                sm: 14,
+                md: 16,
+                lg: 18,
+              };
+              const fontSize = fontSizeMap[size];
+              const base: TextStyle = {
+                paddingTop: size === 'lg' ? 4 : 0,
+                paddingBottom: 0,
+                fontSize,
+                lineHeight: fontSize * 1.2,
+              };
+
+              if (Platform.OS === 'android') {
+                (base as any).textAlignVertical = 'center';
+                (base as any).includeFontPadding = false;
+              }
+
+              return base;
+            })(),
+            style,
+          ]}
+          {...textInputProps}
         />
         {rightIcon && <View className="ml-3">{rightIcon}</View>}
       </View>

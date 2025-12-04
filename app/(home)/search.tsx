@@ -1,127 +1,97 @@
-import { Card, CardContent } from '@/components/ui';
+import { Card } from '@/components/ui';
+import { mockLands } from '@/lib/land-data';
+import { font, icon, moderate, useAccessibilityProps, useResponsiveUtils } from '@/lib/responsive';
 import { getGray500Color, getPrimaryColor, getWhiteColor } from '@/utils/colors';
 import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import React, { useState } from 'react';
 import {
-    Dimensions,
-    ScrollView,
-    Text,
-    TouchableOpacity,
-    View,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const { width, height } = Dimensions.get('window');
-
-// Mock land listings with coordinates (Palestine area)
-const mockLands = [
-  {
-    id: '1',
-    title: 'Olive Grove Land',
-    location: 'Ramallah',
-    size: '2,400 m²',
-    price: '$120,000',
-    verified: true,
-    image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=600&fit=crop',
-    latitude: 31.9073,
-    longitude: 35.2042,
-    type: 'Agricultural',
-  },
-  {
-    id: '2',
-    title: 'Residential Plot',
-    location: 'Nablus',
-    size: '1,800 m²',
-    price: '$95,000',
-    verified: false,
-    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=600&fit=crop',
-    latitude: 32.2211,
-    longitude: 35.2544,
-    type: 'Residential',
-  },
-  {
-    id: '3',
-    title: 'Agricultural Land',
-    location: 'Hebron',
-    size: '3,200 m²',
-    price: '$150,000',
-    verified: true,
-    image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=600&fit=crop',
-    latitude: 31.5326,
-    longitude: 35.0998,
-    type: 'Agricultural',
-  },
-  {
-    id: '4',
-    title: 'Mountain View Plot',
-    location: 'Jerusalem',
-    size: '2,100 m²',
-    price: '$180,000',
-    verified: true,
-    image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=600&fit=crop',
-    latitude: 31.7683,
-    longitude: 35.2137,
-    type: 'Residential',
-  },
-  {
-    id: '5',
-    title: 'Farm Land',
-    location: 'Bethlehem',
-    size: '4,500 m²',
-    price: '$200,000',
-    verified: false,
-    image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=600&fit=crop',
-    latitude: 31.7054,
-    longitude: 35.2024,
-    type: 'Agricultural',
-  },
-];
-
 export default function SearchScreen() {
+  const { spacing, typography } = useResponsiveUtils();
   const primaryColor = getPrimaryColor();
   const whiteColor = getWhiteColor();
   const gray500Color = getGray500Color();
   const [selectedLand, setSelectedLand] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'map' | 'list'>('map');
 
+  // Accessibility props
+  const mapViewAccessibility = useAccessibilityProps('Map view', 'Switch to map view');
+  const listViewAccessibility = useAccessibilityProps('List view', 'Switch to list view');
+  const searchAccessibility = useAccessibilityProps('Search', 'Search for properties');
+
   return (
     <SafeAreaView className="flex-1 bg-background" edges={['top']}>
       <View className="flex-1">
         {/* Header */}
-        <View className="px-5 pt-4 pb-3 bg-background border-b border-border">
-          <View className="flex-row items-center justify-between mb-4">
+        <View 
+          style={{
+            paddingHorizontal: moderate(20),
+            paddingTop: moderate(16),
+            paddingBottom: moderate(12),
+            backgroundColor: '#FFFFFF',
+            borderBottomWidth: 1,
+            borderBottomColor: '#E5E7EB',
+          }}
+        >
+          <View className="flex-row items-center justify-between" style={{ marginBottom: spacing.md }}>
             <View className="flex-1">
-              <Text className="text-2xl font-extrabold text-text mb-1">
+              <Text 
+                style={{
+                  fontSize: typography.h2,
+                  fontWeight: '800',
+                  color: '#000000',
+                  marginBottom: spacing.xs,
+                }}
+              >
                 Find Lands
               </Text>
-              <Text className="text-sm text-text-secondary">
+              <Text 
+                style={{
+                  fontSize: font(14),
+                  color: gray500Color,
+                }}
+              >
                 {mockLands.length} properties available
               </Text>
             </View>
-            <View className="flex-row gap-2">
+            <View className="flex-row" style={{ gap: moderate(8) }}>
               <TouchableOpacity
                 onPress={() => setViewMode('map')}
-                className={`px-4 py-2 rounded-xl ${
-                  viewMode === 'map' ? 'bg-primary' : 'bg-background-secondary'
-                }`}
+                style={{
+                  paddingHorizontal: moderate(16),
+                  paddingVertical: moderate(8),
+                  borderRadius: moderate(12),
+                  backgroundColor: viewMode === 'map' ? primaryColor : '#F9FAFB',
+                }}
+                {...mapViewAccessibility}
               >
                 <FontAwesome5
                   name="map"
-                  size={16}
+                  size={icon(16)}
                   color={viewMode === 'map' ? whiteColor : gray500Color}
                 />
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => setViewMode('list')}
-                className={`px-4 py-2 rounded-xl ${
-                  viewMode === 'list' ? 'bg-primary' : 'bg-background-secondary'
-                }`}
+                style={{
+                  paddingHorizontal: moderate(16),
+                  paddingVertical: moderate(8),
+                  borderRadius: moderate(12),
+                  backgroundColor: viewMode === 'list' ? primaryColor : '#F9FAFB',
+                }}
+                {...listViewAccessibility}
               >
                 <FontAwesome5
                   name="list"
-                  size={16}
+                  size={icon(16)}
                   color={viewMode === 'list' ? whiteColor : gray500Color}
                 />
               </TouchableOpacity>
@@ -131,26 +101,45 @@ export default function SearchScreen() {
           {/* Search Bar */}
           <TouchableOpacity
             activeOpacity={0.7}
-            className="bg-background-secondary rounded-xl p-3.5 flex-row items-center border border-border"
+            style={{
+              backgroundColor: '#F9FAFB',
+              borderRadius: moderate(12),
+              padding: moderate(14),
+              flexDirection: 'row',
+              alignItems: 'center',
+              borderWidth: 1,
+              borderColor: '#E5E7EB',
+            }}
+            {...searchAccessibility}
           >
-            <FontAwesome5 name="search" size={16} color={gray500Color} />
-            <Text className="ml-3 text-sm text-text-secondary font-medium flex-1">
+            <FontAwesome5 name="search" size={icon(16)} color={gray500Color} />
+            <Text 
+              style={{
+                marginLeft: spacing.md,
+                fontSize: font(14),
+                color: gray500Color,
+                fontWeight: '500',
+                flex: 1,
+              }}
+            >
               Search by location, size, price...
             </Text>
           </TouchableOpacity>
         </View>
 
         {viewMode === 'map' ? (
-          <View className="flex-1 relative">
+          <View className="flex-1" style={{ position: 'relative' }}>
             {/* Map Placeholder */}
-            <View className="flex-1 bg-gray-100 relative">
+            <View className="flex-1" style={{ backgroundColor: '#F3F4F6', position: 'relative' }}>
               {/* Map-like background pattern */}
-              <View className="absolute inset-0 opacity-20">
+              <View style={{ position: 'absolute', inset: 0, opacity: 0.2 }}>
                 {Array.from({ length: 20 }).map((_, i) => (
                   <View
                     key={i}
-                    className="absolute border border-gray-300"
                     style={{
+                      position: 'absolute',
+                      borderWidth: 1,
+                      borderColor: '#D1D5DB',
                       left: `${(i % 5) * 20}%`,
                       top: `${Math.floor(i / 5) * 20}%`,
                       width: '18%',
@@ -162,20 +151,33 @@ export default function SearchScreen() {
 
               {/* Map Center Indicator */}
               <View
-                className="absolute"
                 style={{
+                  position: 'absolute',
                   top: '50%',
                   left: '50%',
-                  transform: [{ translateX: -12 }, { translateY: -12 }],
+                  transform: [{ translateX: moderate(-12) }, { translateY: moderate(-12) }],
                 }}
               >
-                <View className="w-6 h-6 rounded-full bg-primary/20 border-2 border-primary" />
-                <View
-                  className="absolute w-2 h-2 rounded-full bg-primary"
+                <View 
                   style={{
+                    width: moderate(24),
+                    height: moderate(24),
+                    borderRadius: moderate(12),
+                    backgroundColor: `${primaryColor}33`,
+                    borderWidth: 2,
+                    borderColor: primaryColor,
+                  }}
+                />
+                <View
+                  style={{
+                    position: 'absolute',
+                    width: moderate(8),
+                    height: moderate(8),
+                    borderRadius: moderate(4),
+                    backgroundColor: primaryColor,
                     top: '50%',
                     left: '50%',
-                    transform: [{ translateX: -4 }, { translateY: -4 }],
+                    transform: [{ translateX: moderate(-4) }, { translateY: moderate(-4) }],
                   }}
                 />
               </View>
@@ -186,8 +188,8 @@ export default function SearchScreen() {
                   key={land.id}
                   activeOpacity={0.8}
                   onPress={() => setSelectedLand(land.id)}
-                  className="absolute"
                   style={{
+                    position: 'absolute',
                     left: `${20 + (index % 3) * 30}%`,
                     top: `${25 + Math.floor(index / 3) * 30}%`,
                   }}
@@ -196,23 +198,46 @@ export default function SearchScreen() {
                     entering={FadeInDown.delay(index * 100).duration(500)}
                   >
                     <View
-                      className={`w-12 h-12 rounded-full items-center justify-center shadow-lg ${
-                        selectedLand === land.id
-                          ? 'bg-primary scale-125'
-                          : 'bg-white'
-                      }`}
+                      style={{
+                        width: moderate(48),
+                        height: moderate(48),
+                        borderRadius: moderate(24),
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: selectedLand === land.id ? primaryColor : whiteColor,
+                        shadowColor: '#000',
+                        shadowOffset: { width: 0, height: 4 },
+                        shadowOpacity: 0.3,
+                        shadowRadius: 8,
+                        elevation: 5,
+                        transform: selectedLand === land.id ? [{ scale: 1.25 }] : [],
+                      }}
                     >
                       <FontAwesome5
                         name="map-marker-alt"
-                        size={20}
+                        size={icon(20)}
                         color={
                           selectedLand === land.id ? whiteColor : primaryColor
                         }
                       />
                     </View>
                     {land.verified && (
-                      <View className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-primary border-2 border-white items-center justify-center">
-                        <MaterialIcons name="verified" size={10} color={whiteColor} />
+                      <View 
+                        style={{
+                          position: 'absolute',
+                          top: moderate(-4),
+                          right: moderate(-4),
+                          width: moderate(20),
+                          height: moderate(20),
+                          borderRadius: moderate(10),
+                          backgroundColor: primaryColor,
+                          borderWidth: 2,
+                          borderColor: whiteColor,
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        <MaterialIcons name="verified" size={icon(10)} color={whiteColor} />
                       </View>
                     )}
                   </Animated.View>
@@ -220,25 +245,117 @@ export default function SearchScreen() {
               ))}
 
               {/* Map Controls */}
-              <View className="absolute bottom-6 right-5 gap-3">
-                <TouchableOpacity className="w-12 h-12 rounded-xl bg-white shadow-lg items-center justify-center border border-border">
-                  <FontAwesome5 name="location-arrow" size={18} color={primaryColor} />
+              <View 
+                style={{
+                  position: 'absolute',
+                  bottom: moderate(24),
+                  right: moderate(20),
+                  gap: moderate(12),
+                }}
+              >
+                <TouchableOpacity 
+                  style={{
+                    width: moderate(48),
+                    height: moderate(48),
+                    borderRadius: moderate(12),
+                    backgroundColor: whiteColor,
+                    shadowColor: '#000',
+                    shadowOffset: { width: 0, height: 4 },
+                    shadowOpacity: 0.3,
+                    shadowRadius: 8,
+                    elevation: 5,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderWidth: 1,
+                    borderColor: '#E5E7EB',
+                  }}
+                >
+                  <FontAwesome5 name="location-arrow" size={icon(18)} color={primaryColor} />
                 </TouchableOpacity>
-                <TouchableOpacity className="w-12 h-12 rounded-xl bg-white shadow-lg items-center justify-center border border-border">
-                  <FontAwesome5 name="layer-group" size={18} color={gray500Color} />
+                <TouchableOpacity 
+                  style={{
+                    width: moderate(48),
+                    height: moderate(48),
+                    borderRadius: moderate(12),
+                    backgroundColor: whiteColor,
+                    shadowColor: '#000',
+                    shadowOffset: { width: 0, height: 4 },
+                    shadowOpacity: 0.3,
+                    shadowRadius: 8,
+                    elevation: 5,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderWidth: 1,
+                    borderColor: '#E5E7EB',
+                  }}
+                >
+                  <FontAwesome5 name="layer-group" size={icon(18)} color={gray500Color} />
                 </TouchableOpacity>
               </View>
 
               {/* Map Legend */}
-              <View className="absolute top-6 left-5 bg-white/95 backdrop-blur-sm rounded-xl p-3 shadow-lg border border-border">
-                <Text className="text-xs font-bold text-text mb-2">Legend</Text>
-                <View className="flex-row items-center gap-2 mb-1">
-                  <View className="w-3 h-3 rounded-full bg-primary" />
-                  <Text className="text-xs text-text-secondary">Verified</Text>
+              <View 
+                style={{
+                  position: 'absolute',
+                  top: moderate(24),
+                  left: moderate(20),
+                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                  borderRadius: moderate(12),
+                  padding: moderate(12),
+                  shadowColor: '#000',
+                  shadowOffset: { width: 0, height: 4 },
+                  shadowOpacity: 0.3,
+                  shadowRadius: 8,
+                  elevation: 5,
+                  borderWidth: 1,
+                  borderColor: '#E5E7EB',
+                }}
+              >
+                <Text 
+                  style={{
+                    fontSize: font(12),
+                    fontWeight: '700',
+                    color: '#000000',
+                    marginBottom: spacing.xs,
+                  }}
+                >
+                  Legend
+                </Text>
+                <View className="flex-row items-center" style={{ marginBottom: spacing.xs, gap: moderate(8) }}>
+                  <View 
+                    style={{
+                      width: moderate(12),
+                      height: moderate(12),
+                      borderRadius: moderate(6),
+                      backgroundColor: primaryColor,
+                    }}
+                  />
+                  <Text 
+                    style={{
+                      fontSize: font(12),
+                      color: gray500Color,
+                    }}
+                  >
+                    Verified
+                  </Text>
                 </View>
-                <View className="flex-row items-center gap-2">
-                  <View className="w-3 h-3 rounded-full bg-gray-400" />
-                  <Text className="text-xs text-text-secondary">Unverified</Text>
+                <View className="flex-row items-center" style={{ gap: moderate(8) }}>
+                  <View 
+                    style={{
+                      width: moderate(12),
+                      height: moderate(12),
+                      borderRadius: moderate(6),
+                      backgroundColor: '#9CA3AF',
+                    }}
+                  />
+                  <Text 
+                    style={{
+                      fontSize: font(12),
+                      color: gray500Color,
+                    }}
+                  >
+                    Unverified
+                  </Text>
                 </View>
               </View>
             </View>
@@ -247,90 +364,200 @@ export default function SearchScreen() {
             {selectedLand && (
               <Animated.View
                 entering={FadeInUp.duration(400)}
-                className="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl border-t-2 border-border"
+                style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  backgroundColor: whiteColor,
+                  borderTopLeftRadius: moderate(24),
+                  borderTopRightRadius: moderate(24),
+                  shadowColor: '#000',
+                  shadowOffset: { width: 0, height: -4 },
+                  shadowOpacity: 0.3,
+                  shadowRadius: 16,
+                  elevation: 10,
+                  borderTopWidth: 2,
+                  borderTopColor: '#E5E7EB',
+                }}
               >
                 {(() => {
                   const land = mockLands.find((l) => l.id === selectedLand);
                   if (!land) return null;
                   return (
-                    <View className="p-5">
-                      <View className="flex-row items-start justify-between mb-4">
+                    <View style={{ padding: moderate(20) }}>
+                      <View className="flex-row items-start justify-between" style={{ marginBottom: spacing.md }}>
                         <View className="flex-1">
-                          <View className="flex-row items-center gap-2 mb-2">
-                            <Text className="text-lg font-bold text-text">
+                          <View className="flex-row items-center" style={{ marginBottom: spacing.xs, gap: moderate(8) }}>
+                            <Text 
+                              style={{
+                                fontSize: typography.h4,
+                                fontWeight: '700',
+                                color: '#000000',
+                              }}
+                            >
                               {land.title}
                             </Text>
                             {land.verified && (
-                              <View className="px-2 py-0.5 rounded-full bg-primary/10 flex-row items-center gap-1">
+                              <View 
+                                style={{
+                                  paddingHorizontal: moderate(8),
+                                  paddingVertical: moderate(2),
+                                  borderRadius: moderate(9999),
+                                  backgroundColor: `${primaryColor}1A`,
+                                  flexDirection: 'row',
+                                  alignItems: 'center',
+                                  gap: moderate(4),
+                                }}
+                              >
                                 <MaterialIcons
                                   name="verified"
-                                  size={12}
+                                  size={icon(12)}
                                   color={primaryColor}
                                 />
-                                <Text className="text-xs font-bold text-primary">
+                                <Text 
+                                  style={{
+                                    fontSize: font(12),
+                                    fontWeight: '700',
+                                    color: primaryColor,
+                                  }}
+                                >
                                   Verified
                                 </Text>
                               </View>
                             )}
                           </View>
-                          <View className="flex-row items-center gap-1.5 mb-1">
+                          <View className="flex-row items-center" style={{ marginBottom: spacing.xs, gap: moderate(6) }}>
                             <FontAwesome5
                               name="map-marker-alt"
-                              size={11}
+                              size={icon(11)}
                               color={gray500Color}
                             />
-                            <Text className="text-sm text-text-secondary font-medium">
+                            <Text 
+                              style={{
+                                fontSize: font(14),
+                                color: gray500Color,
+                                fontWeight: '500',
+                              }}
+                            >
                               {land.location}
                             </Text>
                           </View>
-                          <Text className="text-xs text-text-secondary">
+                          <Text 
+                            style={{
+                              fontSize: font(12),
+                              color: gray500Color,
+                            }}
+                          >
                             {land.type}
                           </Text>
                         </View>
                         <TouchableOpacity
                           onPress={() => setSelectedLand(null)}
-                          className="w-8 h-8 rounded-full bg-background-secondary items-center justify-center"
+                          style={{
+                            width: moderate(32),
+                            height: moderate(32),
+                            borderRadius: moderate(16),
+                            backgroundColor: '#F9FAFB',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                          }}
                         >
                           <FontAwesome5
                             name="times"
-                            size={14}
+                            size={icon(14)}
                             color={gray500Color}
                           />
                         </TouchableOpacity>
                       </View>
 
-                      <View className="h-32 rounded-2xl overflow-hidden mb-4">
+                      <View 
+                        style={{
+                          height: moderate(128),
+                          borderRadius: moderate(16),
+                          overflow: 'hidden',
+                          marginBottom: spacing.md,
+                        }}
+                      >
                         <Image
                           source={{ uri: land.image }}
-                          className="w-full h-full"
+                          style={{ width: '100%', height: '100%' }}
                           contentFit="cover"
                           transition={300}
                         />
                       </View>
 
-                      <View className="flex-row justify-between items-center pt-4 border-t border-border">
+                      <View 
+                        className="flex-row justify-between items-center" 
+                        style={{
+                          paddingTop: spacing.md,
+                          borderTopWidth: 1,
+                          borderTopColor: '#E5E7EB',
+                        }}
+                      >
                         <View>
-                          <Text className="text-xs text-text-secondary mb-1">
+                          <Text 
+                            style={{
+                              fontSize: font(12),
+                              color: gray500Color,
+                              marginBottom: spacing.xs,
+                            }}
+                          >
                             Size
                           </Text>
-                          <Text className="text-base text-text font-bold">
+                          <Text 
+                            style={{
+                              fontSize: font(16),
+                              color: '#000000',
+                              fontWeight: '700',
+                            }}
+                          >
                             {land.size}
                           </Text>
                         </View>
                         <View className="items-end">
-                          <Text className="text-xs text-text-secondary mb-1">
+                          <Text 
+                            style={{
+                              fontSize: font(12),
+                              color: gray500Color,
+                              marginBottom: spacing.xs,
+                            }}
+                          >
                             Price
                           </Text>
-                          <Text className="text-xl font-extrabold text-primary">
+                          <Text 
+                            style={{
+                              fontSize: typography.h3,
+                              fontWeight: '800',
+                              color: primaryColor,
+                            }}
+                          >
                             {land.price}
                           </Text>
                         </View>
                       </View>
 
                       <TouchableOpacity
-                        className="mt-4 bg-primary rounded-2xl py-4 items-center shadow-lg"
+                        style={{
+                          marginTop: spacing.md,
+                          backgroundColor: primaryColor,
+                          borderRadius: moderate(16),
+                          paddingVertical: moderate(16),
+                          alignItems: 'center',
+                          shadowColor: '#000',
+                          shadowOffset: { width: 0, height: 4 },
+                          shadowOpacity: 0.3,
+                          shadowRadius: 8,
+                          elevation: 5,
+                        }}
                       >
-                        <Text className="text-white font-bold text-base">
+                        <Text 
+                          style={{
+                            color: whiteColor,
+                            fontWeight: '700',
+                            fontSize: font(16),
+                          }}
+                        >
                           View Details
                         </Text>
                       </TouchableOpacity>
@@ -344,70 +571,140 @@ export default function SearchScreen() {
           /* List View */
           <ScrollView
             className="flex-1"
-            contentContainerStyle={{ padding: 20, paddingBottom: 100 }}
+            contentContainerStyle={{ 
+              padding: moderate(20), 
+              paddingBottom: moderate(100) 
+            }}
             showsVerticalScrollIndicator={false}
           >
             {mockLands.map((land, index) => (
               <Animated.View
                 key={land.id}
                 entering={FadeInUp.delay(index * 100).duration(500)}
-                className="mb-4"
+                style={{ marginBottom: spacing.md }}
               >
                 <Card
                   variant="elevated"
                   padding="none"
                   className="overflow-hidden shadow-md border border-border rounded-2xl"
                 >
-                  <View className="h-44 relative">
+                  <View style={{ height: moderate(176), position: 'relative' }}>
                     <Image
                       source={{ uri: land.image }}
-                      className="w-full h-full"
+                      style={{ width: '100%', height: '100%' }}
                       contentFit="cover"
                       transition={300}
                     />
                     {land.verified && (
-                      <View className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-primary/95 shadow-lg">
-                        <View className="flex-row items-center gap-1">
-                          <MaterialIcons name="verified" size={11} color={whiteColor} />
-                          <Text className="text-xs text-white font-bold">Verified</Text>
+                      <View 
+                        style={{
+                          position: 'absolute',
+                          top: moderate(12),
+                          right: moderate(12),
+                          paddingHorizontal: moderate(10),
+                          paddingVertical: moderate(4),
+                          borderRadius: moderate(9999),
+                          backgroundColor: `${primaryColor}F2`,
+                          shadowColor: '#000',
+                          shadowOffset: { width: 0, height: 4 },
+                          shadowOpacity: 0.3,
+                          shadowRadius: 8,
+                          elevation: 5,
+                        }}
+                      >
+                        <View className="flex-row items-center" style={{ gap: moderate(4) }}>
+                          <MaterialIcons name="verified" size={icon(11)} color={whiteColor} />
+                          <Text 
+                            style={{
+                              fontSize: font(12),
+                              color: whiteColor,
+                              fontWeight: '700',
+                            }}
+                          >
+                            Verified
+                          </Text>
                         </View>
                       </View>
                     )}
                   </View>
 
-                  <CardContent className="p-4">
-                    <Text className="text-base font-bold text-text mb-1">
+                  <View style={{ padding: moderate(16) }}>
+                    <Text 
+                      style={{
+                        fontSize: font(16),
+                        fontWeight: '700',
+                        color: '#000000',
+                        marginBottom: spacing.xs,
+                      }}
+                    >
                       {land.title}
                     </Text>
-                    <View className="flex-row items-center gap-1.5 mb-3">
+                    <View className="flex-row items-center" style={{ marginBottom: spacing.md, gap: moderate(6) }}>
                       <FontAwesome5
                         name="map-marker-alt"
-                        size={10}
+                        size={icon(10)}
                         color={gray500Color}
                       />
-                      <Text className="text-xs text-text-secondary font-medium">
+                      <Text 
+                        style={{
+                          fontSize: font(12),
+                          color: gray500Color,
+                          fontWeight: '500',
+                        }}
+                      >
                         {land.location}
                       </Text>
                     </View>
-                    <View className="flex-row justify-between items-center pt-3 border-t border-border">
+                    <View 
+                      className="flex-row justify-between items-center" 
+                      style={{
+                        paddingTop: spacing.md,
+                        borderTopWidth: 1,
+                        borderTopColor: '#E5E7EB',
+                      }}
+                    >
                       <View>
-                        <Text className="text-xs text-text-secondary mb-0.5">
+                        <Text 
+                          style={{
+                            fontSize: font(12),
+                            color: gray500Color,
+                            marginBottom: moderate(2),
+                          }}
+                        >
                           Size
                         </Text>
-                        <Text className="text-sm text-text font-bold">
+                        <Text 
+                          style={{
+                            fontSize: font(14),
+                            color: '#000000',
+                            fontWeight: '700',
+                          }}
+                        >
                           {land.size}
                         </Text>
                       </View>
                       <View className="items-end">
-                        <Text className="text-xs text-text-secondary mb-0.5">
+                        <Text 
+                          style={{
+                            fontSize: font(12),
+                            color: gray500Color,
+                            marginBottom: moderate(2),
+                          }}
+                        >
                           Price
                         </Text>
-                        <Text className="text-lg font-extrabold text-primary">
+                        <Text 
+                          style={{
+                            fontSize: typography.h4,
+                            fontWeight: '800',
+                            color: primaryColor,
+                          }}
+                        >
                           {land.price}
                         </Text>
                       </View>
                     </View>
-                  </CardContent>
+                  </View>
                 </Card>
               </Animated.View>
             ))}

@@ -1,22 +1,24 @@
 import { Button, Card, CardContent, Input } from '@/components/ui';
+import { icon } from '@/lib/responsive';
 import { getGray500Color, getWhiteColor } from '@/utils/colors';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    Text,
-    View,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  Text,
+  TouchableWithoutFeedback,
+  View,
 } from 'react-native';
 import Animated, {
-    FadeInDown,
-    FadeInUp,
-    useAnimatedStyle,
-    useSharedValue,
-    withSpring,
-    withTiming,
+  FadeInDown,
+  FadeInUp,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  withTiming,
 } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -91,17 +93,16 @@ export default function PhoneVerificationScreen() {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1"
       >
-        <ScrollView
-          className="flex-1"
-          contentContainerStyle={{
-            paddingHorizontal: 24,
-            paddingTop: 8,
-            paddingBottom: 40,
-          }}
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
-        >
-          <View className="max-w-md mx-auto w-full">
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          <View
+            className="flex-1"
+            style={{
+              paddingHorizontal: 24,
+              paddingTop: 8,
+              paddingBottom: 40,
+            }}
+          >
+            <View className="max-w-md mx-auto w-full flex-1">
             {/* Decorative Background Elements */}
             <View className="absolute -top-20 -left-20 w-40 h-40 rounded-full bg-primary/5" />
             <View className="absolute -bottom-10 -right-10 w-32 h-32 rounded-full bg-primary/5" />
@@ -117,7 +118,7 @@ export default function PhoneVerificationScreen() {
               >
                  <View className="w-20 h-20 rounded-3xl bg-gradient-to-br from-primary to-primary/80 items-center justify-center mb-3 shadow-2xl">
                   <View className="absolute inset-0 rounded-3xl bg-primary/20 blur-xl" />
-                  <FontAwesome5 name={showCodeInput ? "lock" : "mobile-alt"} size={32} color={whiteColor} />
+                  <FontAwesome5 name={showCodeInput ? "lock" : "mobile-alt"} size={icon(32)} color={whiteColor} />
                 </View>
               </Animated.View>
               
@@ -139,7 +140,7 @@ export default function PhoneVerificationScreen() {
               >
                 <View className="flex-row items-center justify-center mb-3 gap-2">
                   <View className="w-10 h-10 rounded-full bg-primary items-center justify-center">
-                    <FontAwesome5 name="check" size={14} color={whiteColor} />
+                    <FontAwesome5 name="check" size={icon(14)} color={whiteColor} />
                   </View>
                   <View className="h-0.5 w-16 bg-primary" />
                   <View className="w-10 h-10 rounded-full bg-primary/20 items-center justify-center border-2 border-primary">
@@ -160,17 +161,17 @@ export default function PhoneVerificationScreen() {
 
             {/* Auth Card */}
             <Animated.View
-              style={animatedCardStyle}
               entering={FadeInUp.delay(250).duration(800).springify()}
               className="mb-6"
             >
-              <Card
-                variant="elevated"
-                className="bg-background/95 backdrop-blur-xl border-2 border-border/50 shadow-2xl rounded-3xl overflow-hidden"
-              >
-                <View className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-primary/60 to-primary" />
-                
-                <CardContent className="p-8">
+              <Animated.View style={animatedCardStyle}>
+                <Card
+                  variant="elevated"
+                  className="bg-background/95 backdrop-blur-xl border-2 border-border/50 shadow-2xl rounded-3xl overflow-hidden"
+                >
+                  <View className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-primary/60 to-primary" />
+                  
+                  <CardContent className="p-8">
                   {!showCodeInput ? (
                     <>
                       <View className="mb-8">
@@ -186,7 +187,7 @@ export default function PhoneVerificationScreen() {
                             <View className="w-10 h-10 rounded-xl bg-primary/10 items-center justify-center">
                               <FontAwesome5
                                 name="mobile-alt"
-                                size={18}
+                                size={icon(18)}
                                 color={gray500Color}
                               />
                             </View>
@@ -211,11 +212,11 @@ export default function PhoneVerificationScreen() {
                       </Button>
                     </>
                   ) : (
-                    <>
-                      <View className="bg-gradient-to-br from-primary/10 to-primary/5 p-5 rounded-2xl mb-8 border-2 border-primary/20 shadow-sm">
-                        <View className="flex-row items-center justify-center gap-3">
+                  <>
+                      <View className="bg-gradient-to-br from-primary/10 to-primary/5 p-5 rounded-2xl mb-6 border-2 border-primary/20 shadow-sm">
+                          <View className="flex-row items-center justify-center gap-3">
                           <View className="w-10 h-10 rounded-full bg-primary/20 items-center justify-center">
-                            <FontAwesome5 name="mobile-alt" size={16} color={gray500Color} />
+                            <FontAwesome5 name="mobile-alt" size={icon(16)} color={gray500Color} />
                           </View>
                           <View className="flex-1">
                             <Text className="text-xs text-text-secondary font-semibold mb-1 uppercase tracking-wide">
@@ -228,7 +229,7 @@ export default function PhoneVerificationScreen() {
                         </View>
                       </View>
 
-                      <View className="mb-8">
+                      <View className="mb-6">
                         <Input
                           label="Verification Code"
                           placeholder="• • • • • •"
@@ -240,7 +241,7 @@ export default function PhoneVerificationScreen() {
                           className="mb-2"
                           leftIcon={
                             <View className="w-10 h-10 rounded-xl bg-primary/10 items-center justify-center">
-                              <FontAwesome5 name="lock" size={18} color={gray500Color} />
+                              <FontAwesome5 name="lock" size={icon(18)} color={gray500Color} />
                             </View>
                           }
                         />
@@ -263,7 +264,7 @@ export default function PhoneVerificationScreen() {
                           !verificationCode.trim() ||
                           verificationCode.length !== 6
                         }
-                        className="w-full rounded-2xl shadow-xl mb-4 h-14"
+                        className="w-full rounded-2xl shadow-xl mb-2"
                       >
                         <Text className="font-bold text-base tracking-wide">
                           Verify & Continue
@@ -278,15 +279,16 @@ export default function PhoneVerificationScreen() {
                           setVerificationCode('');
                           progressWidth.value = 0;
                         }}
-                        className="w-full rounded-xl h-12"
+                        className="w-full rounded-xl"
                       >
-                        <FontAwesome5 name="arrow-left" size={14} color={gray500Color} style={{ marginRight: 8 }} />
+                        <FontAwesome5 name="arrow-left" size={icon(14)} color={gray500Color} style={{ marginRight: 8 }} />
                         <Text className="font-semibold">Change Phone Number</Text>
                       </Button>
                     </>
                   )}
                 </CardContent>
               </Card>
+              </Animated.View>
             </Animated.View>
 
             {/* Security Badge */}
@@ -295,26 +297,28 @@ export default function PhoneVerificationScreen() {
               className="flex-row items-center justify-center gap-2 mb-6"
             >
               <View className="w-5 h-5 rounded-full bg-green-500/20 items-center justify-center">
-                <FontAwesome5 name="shield-alt" size={10} color="#10b981" />
+                <FontAwesome5 name="shield-alt" size={icon(10)} color="#10b981" />
               </View>
               <Text className="text-xs text-text-secondary font-semibold">
                 Secure & Encrypted Connection
               </Text>
             </Animated.View>
 
-            {/* Footer */}
-            <Animated.View
-              entering={FadeInUp.delay(500).duration(600)}
-            >
-              <Text className="text-xs text-text-secondary text-center leading-relaxed px-6 font-medium">
-                By continuing, you agree to our{' '}
-                <Text className="text-primary font-bold">Terms of Service</Text>
-                {' '}and{' '}
-                <Text className="text-primary font-bold">Privacy Policy</Text>
-              </Text>
-            </Animated.View>
+              {/* Footer */}
+              <Animated.View
+                entering={FadeInUp.delay(500).duration(600)}
+                className="mt-auto"
+              >
+                <Text className="text-xs text-text-secondary text-center leading-relaxed px-6 font-medium">
+                  By continuing, you agree to our{' '}
+                  <Text className="text-primary font-bold">Terms of Service</Text>
+                  {' '}and{' '}
+                  <Text className="text-primary font-bold">Privacy Policy</Text>
+                </Text>
+              </Animated.View>
+            </View>
           </View>
-        </ScrollView>
+        </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
