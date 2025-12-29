@@ -1,0 +1,5 @@
+ALTER TABLE car_listings ALTER COLUMN user_id SET NOT NULL;
+ALTER TABLE car_listings ALTER COLUMN images SET NOT NULL;
+ALTER TABLE car_listings ALTER COLUMN images SET DEFAULT '{}';
+ALTER TABLE car_listings ALTER COLUMN created_at SET NOT NULL;
+ALTER TABLE car_listings ALTER COLUMN updated_at SET NOT NULL;

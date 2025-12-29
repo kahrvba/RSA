@@ -50,7 +50,9 @@
           "project": "real-state-applicaition",
           "organization": "real-state-applicatoin"
         }
-      ]
+      ],
+      "expo-font",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true,
