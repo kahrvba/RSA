@@ -1,0 +1,56 @@
+- postgres
+    enable : uuid, hypopg, pg_net, pg_graphql
+    supabase metrics api with supabase-garfana
+    supabase metrics api to admin dashboard
+
+
+- Lands RPCs functions
+
+
+
+- app.json
+    setup the proper splash screen and animation
+    add com.apple.developer.kernel.increased-memory-limit
+
+
+- notificaions system
+
+
+- mmkv local caching system
+    cache keys
+    cache resolver
+    cache TTL
+    invalidaions classes
+    cleanup classes
+    auth storage
+
+- Registatoins
+    intgrate libphonenumber-js
+    phone otp (6 codes) 
+    threshold, race conditions
+    userID token for login and session persistant 
+
+
+- login
+    login RPC --> validate token ---> otp ---> refreash tokens
+    threshold, race conditions
+
+- google map
+    enable:
+        Maps SDK for iOS
+        Geocoding API
+        Places API (New)
+        Directions API
+        Places API
+        Geolocation API
+        Maps JavaScript API
+        Maps SDK for Android
+    cache any search with 48HR TTL 
+    cache directions with 48 TTL
+    save, cache currect locataions with validaion 6HRs, with validaion on foucs if cache miss
+
+- incompelete creations profiles
+    db_value to track current form step
+    realtime subscribe to db_value  
+    in missing profiles retrive the last step
+     
