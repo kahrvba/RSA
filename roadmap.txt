@@ -1,11 +1,8 @@
 - postgres
     enable : uuid, hypopg, pg_net, pg_graphql
-    supabase metrics api with supabase-garfana
-    supabase metrics api to admin dashboard
-
+    BIGINT id
 
 - Lands RPCs functions
-
 
 
 - app.json
@@ -14,7 +11,8 @@
 
 
 - notificaions system
-
+    edge_func for types of notificaions
+    deeplink
 
 - mmkv local caching system
     cache keys
@@ -49,8 +47,9 @@
     cache directions with 48 TTL
     save, cache currect locataions with validaion 6HRs, with validaion on foucs if cache miss
 
-- incompelete creations profiles
-    db_value to track current form step
-    realtime subscribe to db_value  
-    in missing profiles retrive the last step
+- RPC func to check the profile exist on db
+    redirect either home
+    redirect either Registatoins
+
+-network connectivty using netinfooooo
      
